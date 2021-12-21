@@ -51,9 +51,17 @@ for now, we know that they behave differently
 ## Variables and Mutability
 - in rust variables are immutable by default
 - `mut` indicates that are variable is going to be immutable
+- `const` is used for variables that must be immutable
+	- rust might do some kind of optimization with consts, not sure tho
 - we use the term "bind" when dealing with variables and `=`
+- shadowing: repeat the usage of `let` on an exiting variable's name
+- with shadowing we can perform some transformations, but keep the variable immutable
+- shadowing respects the rules of scope as usual
+- shadowing essentially will create a new variable, which *could* have a different type too
+- shadowing could help us avoid having to come up with creative helper var names
+- we cannot change the type of `mut` variables, however. This is a key difference between them
 
- 
+
 ## Other
 Terminator, move between windows alt + arrow
 [Parameter vs Argument](https://stackoverflow.com/a/23992345)
