@@ -49,6 +49,9 @@ for now, we know that they behave differently
 
 
 ## Variables and Mutability
+- use `let`
+	- `let` and other *statements* do not have a return value (as in C)
+	- therefore `let x = y = 6;` is invalid in rust
 - in rust variables are immutable by default
 - `mut` indicates that are variable is going to be immutable
 - `const` is used for variables that must be immutable
@@ -60,6 +63,66 @@ for now, we know that they behave differently
 - shadowing essentially will create a new variable, which *could* have a different type too
 - shadowing could help us avoid having to come up with creative helper var names
 - we cannot change the type of `mut` variables, however. This is a key difference between them
+
+## Data Types
+- every value in rust has a datatype (statically typed language, types need to be known at compile time)
+- there are two subsets of datatypes: scalar and compound
+- the compiler can infer the type, but when we do conversions we should specify
+- four primary scalar types: integers, floating-pt, Bool, char
+- signed integers are stored using two's complement representation
+- we can use an underscore as a visual separator for any kind of number
+- in debug mode overflow is checked during compile time, which would cause a runtime panick
+- if compiled in release mode, overflow checking is foregone and 2's complement wrapping is used
+	- relying on this behavior is considered an error
+	- there are some libraries that offer wrapping and saturation (research more)
+- f32 is ieee-754 floating point standard and f64 is double precision
+	- have roughly the same runtime from the CPU
+- `bool` type can be inferred or explicitly typed by the programmer
+- division is floored unless there is a floating point operand
+- char is specified with singular quotes
+	- is four bytes, represents a unicode scalar value (ie more than just ascii values)
+	- chars are little more complex in rust than human intuition tells us (see ch 8)
+### Compound types
+- could be Tuple or Array
+- *Tuple* has fixed size after init, we can assign tuple's values to indiv values called `desctructing`
+- we can also access tuples by 0'd index using `.` operator
+- `unit type` tuple has no elements which can be used when there is no meaningful value to be assigned. The value returned is the `unit value`
+- we can define *arrays* with their [type;size] or [value; ct]
+- during runtime accesses of arrays, it will check array bounds (other low-level langs don't check this, and will proceed to blindly segfault). If detected, code execution will stop and tell you there was a panik
+
+## Fucntions
+- use snake_case
+- declare with `fn`
+- rust does not care where you define functions
+- must declare the types of the parameters so rust does not need to infer their types
+- function bodies contain statements and expressions
+	- bodies are made up of `statements`, *optionally* ending in an `expression`
+	- `expressions`: instructions that perform some action and do not return a value
+	- `expressions` evaluate to a resulting value
+- we can use `{}` alone to create their own scopes
+- use arrow notation to return a value from a function
+- you can return early from a function using `return` but most functions return the last expression implicitly
+
+```
+fn five() -> i32 {
+    5
+}
+
+fn main() {
+    let x = five();
+
+    println!("The value of x is: {}", x);
+}
+
+```
+
+## Expressions vs Statements
+- rust is an expression-based language
+- function definitions are statements, therefore they cannot simply return a value
+	- instead we need to use `->` notation
+- let is a statement
+- in order to convert an expression into a statement, we need to remove the semi-colon from the last line of a block (enclosed by `{}`)
+- if we accidently put a semi-colon at the end of a returning function, we will get a compiler error as the expected return type would be the empty type, and not what we had specified
 
 
 ## Other
