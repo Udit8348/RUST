@@ -125,6 +125,21 @@ fn main() {
 - if we accidently put a semi-colon at the end of a returning function, we will get a compiler error as the expected return type would be the empty type, and not what we had specified
 
 
+## Control Flow
+- `if` statment with `else if` and `else`
+- `if` can be an exprression, so a variable can be bound it is return value
+	- kinda like a ternarary
+	- same type must be returned (compile time check)
+
+- looping constructs include `loop`, `while` and `for`
+- we can label loops (good for nested)
+- we can use `break` to return a value if the value is placed right after it
+	- these will have a semi-colon after them
+- while loop has a condition
+- enhanced for loop adds more safety to the code and iterates through arrays faster since the compiler does not need to check for bounds
+
+
+
 ## Other
 Terminator, move between windows alt + arrow
 [Parameter vs Argument](https://stackoverflow.com/a/23992345)
