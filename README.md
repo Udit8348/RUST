@@ -1,13 +1,4 @@
 # RUST Learning
-
-## rusttest.rs
-hello world [equivalent](https://www.techrepublic.com/article/how-to-install-rust-on-linux/) for rust
-
-## macro vs function
-`println!` is a macro and `println` is a function
-- think of macro as a piece of code that writes other code
-- macros can take in a variable number of arguments 
-
 ## Cargo
 - `cargo new <package-name>` to create a new cargo project
 	- will contain a `cargo.toml` and `src/main.rs`
@@ -40,20 +31,22 @@ hello world [equivalent](https://www.techrepublic.com/article/how-to-install-rus
 - package section: the following statements are configuring a package
 - dependencies section: list other dependencies referred to as crates 
 - crate's version follows Semantic Versioning
-- semantic verionsioning makes sure you get the latest patches for your version, but gaurantee compatability so your code will compile
-- when we inlcude a crate it will be a library crate not a binary create which we create when runningg cargo build/run etc
-- cargo fetches the latest versions of hte deps you have specified from the *registry*
+- semantic versioning makes sure you get the latest patches for your version, but guarantee compatibility so your code will compile
+- when we include a crate it will be a library crate not a binary create which we create when running cargo build/run etc
+- cargo fetches the latest versions of the deps you have specified from the *registry*
 - the registry is a copy of the data on Crates.io which is where people post OS Rust projects
 - after downloading the crates, they are compiled for the first time
 - if the dependencies are not changed, then they are no recompiled
-- when you build a project for the first time, cargo saves the working verions of deps in `.lock` file
+- when you build a project for the first time, cargo saves the working versions of deps in `.lock` file
 - if there is a breaking update, then it will not be added to the project, thanks to `.lock` file
 
 ## Crates
-- `rand` is an exmple crate we could use, rng is not part of rust std lib
+- `rand` is an example crate we could use, rng is not part of rust std lib
 - adding a new crate:
 	- add crate and version to the `.toml` file
-	- add the `use` statment to the `.rs` file
+	- add the `use` statement to the `.rs` file
+
+---
 
 ## Variables and Mutability
 - use snake_case
@@ -80,7 +73,7 @@ hello world [equivalent](https://www.techrepublic.com/article/how-to-install-rus
 - four primary scalar types: integers, floating-pt, Bool, char
 - signed integers are stored using two's complement representation
 - we can use an underscore as a visual separator for any kind of number
-- in debug mode overflow is checked during compile time, which would cause a runtime panick
+- in debug mode overflow is checked during compile time, which would cause a runtime panic
 - if compiled in release mode, overflow checking is foregone and 2's complement wrapping is used
 	- relying on this behavior is considered an error
 	- there are some libraries that offer wrapping and saturation (research more)
@@ -93,20 +86,30 @@ hello world [equivalent](https://www.techrepublic.com/article/how-to-install-rus
 	- chars are little more complex in rust than human intuition tells us (see ch 8)
 - `&` indicates a reference type in rust
 
-### String
+### str vs String
+- `str` is an immutable fixed length string *somewhere* in memory
+- `String` is a growable, heap allocated data structure. *Note*: it is analogous to `StringBuffer` from Java, not Java `String` which is immutable.
+`String` maintains if length and capacity, while `str` only has len()
 - probably has to be a reference type since it will always get heap allocated
 - heap allocation lets them be unknown sizes at compile time
 - it is not automatically created when we have `""`, you need to convert it into a String using the `from` trait of `String` which looks like (`String::from("Udit")`)
 - strings do no implement the Copy trait, so we cannot use that to manage ownership issues
 
+### Characters
+These are "Unicode Scalar Values", USV
+Use single quotes, and are represented with values like `U+221E`
+We can do character analysis on a string using `.len()` to get the number of bytes and `.chars().count()`
+- important distinction here is that ascii characters will have one byte of data dedicated to them, while unicode characters may have more bytes dedicated to them for example `∞` has 3 bytes, so using `chars count` will tell us that despite having 3 bytes, it is still one character. `chars` uses an iterator to determine individual characters.
+- **dont** confuse this with sizeof `char`, since we have observed a character having different lengths. The truth is that `chars` have to be *4 bytes* in size, or smaller. This is so that they can hold an entire unicode character.
 
 ### Compound types
 - could be Tuple or Array
-- *Tuple* has fixed size after init, we can assign tuple's values to indiv values called `desctructing`
+- *Tuple* has fixed size after init, we can assign tuple's values to indiv values called `destructing`
 - we can also access tuples by 0'd index using `.` operator
 - `unit type` tuple has no elements which can be used when there is no meaningful value to be assigned. The value returned is the `unit value`
 - we can define *arrays* with their [type;size] or [value; ct]
 - during runtime accesses of arrays, it will check array bounds (other low-level langs don't check this, and will proceed to blindly segfault). If detected, code execution will stop and tell you there was a panik
+---
 
 ## Functions
 - use snake_case
@@ -120,6 +123,11 @@ hello world [equivalent](https://www.techrepublic.com/article/how-to-install-rus
 - we can use `{}` alone to create their own scopes
 - use arrow notation to return a value from a function
 - you can return early from a function using `return` but most functions return the last expression implicitly
+
+### macro vs function
+`println!` is a macro and `println` is a function
+- think of macro as a piece of code that writes other code
+- macros can take in a variable number of arguments 
 
 ```
 fn five() -> i32 {
@@ -140,12 +148,12 @@ fn main() {
 	- instead we need to use `->` notation
 - let is a statement
 - in order to convert an expression into a statement, we need to remove the semi-colon from the last line of a block (enclosed by `{}`)
-- if we accidently put a semi-colon at the end of a returning function, we will get a compiler error as the expected return type would be the empty type, and not what we had specified
+- if we accidentally put a semi-colon at the end of a returning function, we will get a compiler error as the expected return type would be the empty type, and not what we had specified
 
 ## Control Flow
-- `if` statment with `else if` and `else`
-- `if` can be an exprression, so a variable can be bound it is return value
-	- kinda like a ternarary
+- `if` statement with `else if` and `else`
+- `if` can be an expression, so a variable can be bound it is return value
+	- kinda like a ternary
 	- same type must be returned (compile time check)
 
 - looping constructs include `loop`, `while` and `for`
@@ -156,14 +164,24 @@ fn main() {
 - enhanced for loop adds more safety to the code and iterates through arrays faster since the compiler does not need to check for bounds
 
 ## Ownership
-In rust a big memory management concept is the notion that a reference can only have one owner. If we reassign a reference, then the reference belongs to the newest owner.
-
-One example of this could be creating a string, then assigning the reference to a new variable. If we try to use the original, we will get an error. (Look it up using `rustc --explain E0382`)
+In rust a big memory management concept is the notion that a reference can only have one owner. If we reassign a reference, then the reference belongs to the newest owner. One example of this could be creating a string, then assigning the reference to a new variable. If we try to use the original, we will get an error. (Look it up using `rustc --explain E0382`)
 - simply states: a variable was used after its contents were moved elsewhere
-- resolutions: use a Copy, Clone, or pass by reference
+- resolutions: use a Copy, Clone, or pass by reference (or just use & to get a reference)
 - read more in rust book chapter 4
+
+### References
+If we want to modify a reference, we need to have ownership over it
+
+---
+
+## Testing in Rust
+
 
 
 ## Other
 Terminator, move between windows alt + arrow
+
 [Parameter vs Argument](https://stackoverflow.com/a/23992345)
+
+### rusttest.rs
+located in manual, it is a hello world [equivalent](https://www.techrepublic.com/article/how-to-install-rust-on-linux/) for rust that demonstrates how to manually compile for rust

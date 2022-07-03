@@ -1,0 +1,25 @@
+# Use cargo run --bin <module-name>
+
+[package]
+name = "udit-learns-rust"
+version = "0.1.0"
+authors = ["Udit Subramanya <usubramanya91@gmail.com>"]
+edition = "2021"
+include = ["src/**/*", "Cargo.toml"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "hello_cargo"
+path = "./hello_cargo/src/main.rs"
+
+[[bin]]
+name = "learn_string"
+path = "./learn_string/src/main.rs"
+
+[[bin]]
+name = "unit_test"
+path = "./unit_test/src/main.rs"
+
+[dependencies]
+rand = "0.8.3"
