@@ -5,13 +5,16 @@ hello world [equivalent](https://www.techrepublic.com/article/how-to-install-rus
 
 ## macro vs function
 `println!` is a macro and `println` is a function
-for now, we know that they behave differently 
+- think of macro as a piece of code that writes other code
+- macros can take in a variable number of arguments 
 
 ## Cargo
 - `cargo new <package-name>` to create a new cargo project
-- will contain a `cargo.toml` and `src/main.rs`
+	- will contain a `cargo.toml` and `src/main.rs`
 - creates a new git repository along with .gitignore file (overridden if inside existing git repo)
 - cargo expects the root directory to contain the Cargo.toml file, license info, config files, readme etc. Functional code file should be in src
+	- lists the multiple rust projects you have in this root directory (created with `cargo new`)
+	- file names should be in snake_case
 - if there are no code changes, it will not recompile the code (build the project)
 - when the project is rebuilt, we will see output for that
 - use `rustup` to update rust
@@ -19,12 +22,18 @@ for now, we know that they behave differently
 ## Cargo Commands
 - `cargo build` creates an executable in `target/debug/<package_name>`
 - use `./target/debug/<executable_name>` to run it
-- use 'cargo run` to compile and run in one command
+- use `cargo run` to compile and run in one command
+	- if our cargo TOML has multiple bins specified, then you can tell it which bin to choose using `--bin <name>` ie: `cargo run --bin calculator`
 - use `cargo check` to see if the package compiles, but does not produce an executable (usually this will be much faster than creating an executable when you are still developing your code)
 - also at this point, once you have installed rust, you are OS agnostic since the CLI commands are the same for all OS
 - when you are ready, you can compile with optimizations for a faster release build `cargo build --release`
 - use `cargo doc --open` to generate documentation for the deps you are using
 	- this will create docs locally, so you should gitignore the `/target` folder
+
+## Manually Compiling
+- `rustc` compile rust code into machine code
+
+
 ## TOML
 "Tom's Obvious Minimal Language"
 - `[]` are section headings
@@ -40,15 +49,15 @@ for now, we know that they behave differently
 - when you build a project for the first time, cargo saves the working verions of deps in `.lock` file
 - if there is a breaking update, then it will not be added to the project, thanks to `.lock` file
 
-
 ## Crates
 - `rand` is an exmple crate we could use, rng is not part of rust std lib
 - adding a new crate:
 	- add crate and version to the `.toml` file
 	- add the `use` statment to the `.rs` file
 
-
 ## Variables and Mutability
+- use snake_case
+- use SCREAMING_SNAKE_CASE for constants
 - use `let`
 	- `let` and other *statements* do not have a return value (as in C)
 	- therefore `let x = y = 6;` is invalid in rust
@@ -82,6 +91,15 @@ for now, we know that they behave differently
 - char is specified with singular quotes
 	- is four bytes, represents a unicode scalar value (ie more than just ascii values)
 	- chars are little more complex in rust than human intuition tells us (see ch 8)
+- `&` indicates a reference type in rust
+
+### String
+- probably has to be a reference type since it will always get heap allocated
+- heap allocation lets them be unknown sizes at compile time
+- it is not automatically created when we have `""`, you need to convert it into a String using the `from` trait of `String` which looks like (`String::from("Udit")`)
+- strings do no implement the Copy trait, so we cannot use that to manage ownership issues
+
+
 ### Compound types
 - could be Tuple or Array
 - *Tuple* has fixed size after init, we can assign tuple's values to indiv values called `desctructing`
@@ -90,7 +108,7 @@ for now, we know that they behave differently
 - we can define *arrays* with their [type;size] or [value; ct]
 - during runtime accesses of arrays, it will check array bounds (other low-level langs don't check this, and will proceed to blindly segfault). If detected, code execution will stop and tell you there was a panik
 
-## Fucntions
+## Functions
 - use snake_case
 - declare with `fn`
 - rust does not care where you define functions
@@ -124,7 +142,6 @@ fn main() {
 - in order to convert an expression into a statement, we need to remove the semi-colon from the last line of a block (enclosed by `{}`)
 - if we accidently put a semi-colon at the end of a returning function, we will get a compiler error as the expected return type would be the empty type, and not what we had specified
 
-
 ## Control Flow
 - `if` statment with `else if` and `else`
 - `if` can be an exprression, so a variable can be bound it is return value
@@ -138,6 +155,13 @@ fn main() {
 - while loop has a condition
 - enhanced for loop adds more safety to the code and iterates through arrays faster since the compiler does not need to check for bounds
 
+## Ownership
+In rust a big memory management concept is the notion that a reference can only have one owner. If we reassign a reference, then the reference belongs to the newest owner.
+
+One example of this could be creating a string, then assigning the reference to a new variable. If we try to use the original, we will get an error. (Look it up using `rustc --explain E0382`)
+- simply states: a variable was used after its contents were moved elsewhere
+- resolutions: use a Copy, Clone, or pass by reference
+- read more in rust book chapter 4
 
 
 ## Other
